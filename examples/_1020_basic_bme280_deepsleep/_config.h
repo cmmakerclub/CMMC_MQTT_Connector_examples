@@ -1,7 +1,7 @@
 #include <Arduino.h> 
 
 /* BOARD INFO */
-String DEVICE_NAME      = "LATTE-001"; 
+String DEVICE_NAME      = "LATTE-007"; 
 
 /* WIFI INFO */ 
 String WIFI_SSID        = "ampere";

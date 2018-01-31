@@ -2,37 +2,35 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 #include <MqttConnector.h>
-#include <DHT.h>
 #include <Wire.h>
 #include <SPI.h>
-
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
 
 #include "init_mqtt.h"
-#include "_publish.h"
+#include "_publish.h" 
 #include "_receive.h"
 #include "_config.h"
 
-#define DHT_PIN 12
-
 MqttConnector *mqtt; 
-DHT dht(DHT_PIN, DHT11);
+Adafruit_BME280 bme;
+
 
 int relayPinState       = HIGH;
 int relayPin            = 15; 
-
 char myName[40];
 
 void init_hardware()
-{ 
+{
+  Wire.begin();
+  bme.begin();
+  
   pinMode(relayPin, OUTPUT);
   pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(DHT_PIN, INPUT_PULLUP);
-  digitalWrite(relayPin, relayPinState);
 
-  dht.begin();
-
+  digitalWrite(relayPin, relayPinState);;
   // serial port initialization
-  Serial.begin(115200);
+  Serial.begin(57600);
   delay(10);
   Serial.println();
   Serial.println("Starting...");

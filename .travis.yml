@@ -9,6 +9,7 @@ env:
     - PLATFORMIO_CI_SRC=examples/_0020_basic_bme280
     - PLATFORMIO_CI_SRC=examples/_0030_basic_bme680
     - PLATFORMIO_CI_SRC=examples/_0040_basic_dht
+    - PLATFORMIO_CI_SRC=examples/_1020_basic_bme280_deepsleep
 install: 
     - pip install -U platformio
     - platformio lib -g install 31 64 39 166 19 31 310

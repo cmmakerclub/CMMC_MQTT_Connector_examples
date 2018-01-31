@@ -1,21 +1,17 @@
-#include <Arduino.h>
 #include <MqttConnector.h>
-#include <DHT.h>
+#include <Adafruit_BME280.h>
 
 extern int relayPinState;
 extern MqttConnector* mqtt;
 extern int relayPin;
 extern char myName[];
-extern DHT dht;
 
-static void readSensor();
-
-// sensor
-float temperature = 0; 
-float humidity = 0; 
+static void readSensor(); 
 
 extern String DEVICE_NAME;
 extern int PUBLISH_EVERY;
+extern Adafruit_BME280 bme;
+float t,h,p;
 
 void register_publish_hooks() {
   strcpy(myName, DEVICE_NAME.c_str());
@@ -32,11 +28,16 @@ void register_publish_hooks() {
     JsonObject& info = (*root)["info"];
     data["myName"] = myName;
     data["millis"] = millis();
-    data["temperature"] = temperature;
-    data["humidity"] = humidity;
+    data["temperature_c_"] = t;
+    data["humidity_percent_rh"] = h;
+    data["pressure_pa"] = p;
     data["relayState"] = relayPinState;
     data["updateInterval"] = PUBLISH_EVERY;
     data["A0"] = analogRead(A0);
+    if (millis() > 120L*1000) {
+      Serial.println("Good night..");
+      ESP.deepSleep(30*10e5);
+    }
   }, PUBLISH_EVERY);
 
   mqtt->on_after_prepare_data([&](JsonObject * root) {
@@ -49,25 +50,15 @@ void register_publish_hooks() {
 }
 
 static void readSensor() {
-  // Reading temperature or humidity takes about 250 milliseconds!
-  // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
-  float h = dht.readHumidity();
-  // Read temperature as Celsius (the default)
-  float t = dht.readTemperature();
-  // Read temperature as Fahrenheit (isFahrenheit = true)
-  float f = dht.readTemperature(true);
-  // Check if any reads failed and exit early (to try again).
-  if (isnan(h) || isnan(t) || isnan(f)) {
-    Serial.println("Failed to read from DHT sensor!");
-    return;
+  t = String(bme.readTemperature()).toFloat();
+  h = String(bme.readHumidity()).toFloat(); 
+  p = String(bme.readPressure()).toFloat(); 
+
+  if ((isnan(h) || h == 0)  ||  (isnan(t) || t == 0)) {
+    Serial.println("read bme280 failed... try again..");
   }
   else {
-    temperature = t;
-    humidity = h;
-    Serial.print("Temp: ");
-    Serial.println(temperature);
-    Serial.print("Humid: ");
-    Serial.println(humidity);
-  }
+    Serial.printf("Temperature: %.2f, Humidity: %.2f, Sensor Pressure = %.2f\r\n", t, h, p); 
+  } 
 
 }
