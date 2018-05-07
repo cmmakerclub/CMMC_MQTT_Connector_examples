@@ -34,9 +34,9 @@ void register_publish_hooks() {
     data["relayState"] = relayPinState;
     data["updateInterval"] = PUBLISH_EVERY;
     data["A0"] = analogRead(A0);
-    if (millis() > 120L*1000) {
+    if (millis() > 60L*1000) {
       Serial.println("Good night..");
-      ESP.deepSleep(30*10e5);
+      ESP.deepSleep(60*10e5);
     }
   }, PUBLISH_EVERY);
 

@@ -1,16 +1,16 @@
 #include <Arduino.h> 
 
 /* BOARD INFO */
-String DEVICE_NAME      = "LATTE-020"; 
+String DEVICE_NAME      = "MyLatte-Test"; 
 
 /* WIFI INFO */ 
-String WIFI_SSID        = "ampere";
+String WIFI_SSID        = "CMMC-3rd";
 String WIFI_PASSWORD    = "espertap";
 
 /* MQTT INFO */ 
-String MQTT_HOST        = "192.168.12.1";
-String MQTT_USERNAME    = "";
-String MQTT_PASSWORD    = "";
+String MQTT_HOST        = "odin.cmmc.io";
+String MQTT_USERNAME    = "cmmc";
+String MQTT_PASSWORD    = "cmmc";
 String MQTT_CLIENT_ID   = "";
 String MQTT_PREFIX      = "CMMC/";
 int    MQTT_PORT        = 1883;
